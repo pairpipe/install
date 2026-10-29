@@ -52,8 +52,8 @@ The program is in the newest version folder:
 - [Win] `%USERPROFILE%\.claude\plugins\cache\pairpipe\pairpipe\<version>\bin\pairpipe.exe`
 - [Mac]/[Linux] `~/.claude/plugins/cache/pairpipe/pairpipe/<version>/bin/pairpipe`
 
-Pick the newest version **numerically** (0.3.10 is newer than 0.3.9, though a text sort puts it first):
-- PowerShell: `Get-ChildItem "$HOME\.claude\plugins\cache\pairpipe\pairpipe" -Directory | Sort-Object { [version]$_.Name } | Select-Object -Last 1 -ExpandProperty FullName`
+Pick the newest version **numerically** (0.3.10 is newer than 0.3.9, though a text sort puts it first; a release beats its own pre-release such as 0.3.4-beta):
+- PowerShell: `Get-ChildItem "$HOME\.claude\plugins\cache\pairpipe\pairpipe" -Directory | Sort-Object { try { [version]($_.Name -replace '[-+].*$','') } catch { [version]'0.0' } }, { $_.Name -notmatch '-' } | Select-Object -Last 1 -ExpandProperty FullName`
 - bash: `ls -d ~/.claude/plugins/cache/pairpipe/pairpipe/*/ | sort -V | tail -1`
 
 (If `CLAUDE_CONFIG_DIR` is set, use it instead of `~/.claude`.) Below, `PAIRPIPE` means that full path.
