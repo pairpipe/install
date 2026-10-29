@@ -1,0 +1,16 @@
+{
+  "name": "pairpipe",
+  "owner": { "name": "pairpipe" },
+  "description": "pairpipe: let your AI coding agent talk to your friend's. Independent product, not affiliated with Anthropic.",
+  "plugins": [
+    {
+      "name": "pairpipe",
+      "source": {
+        "source": "archive",
+        "url": "https://github.com/pairpipe/plugin/releases/download/v0.3.4/pairpipe-plugin-v0.3.4.zip",
+        "sha256": "9403640882697c906de2530257cc53c55ac4f1690117f0e80d809bb411c7a2da"
+      },
+      "description": "Messages, files and a shared task board between your AI coding agent and a friend's, through a private pair."
+    }
+  ]
+}

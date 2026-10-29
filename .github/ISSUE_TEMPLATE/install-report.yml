@@ -1,0 +1,36 @@
+name: Install report
+description: How installing pairpipe went (use this only if the automatic report could not be sent)
+title: "Install report: "
+labels: ["install-report"]
+body:
+  - type: markdown
+    attributes:
+      value: "Please don't include emails, names, file paths, setup codes or keys."
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options: [success, fail, stuck]
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: OS, shell, desktop app or CLI, Claude Code version
+      placeholder: "Windows 11, PowerShell 5.1, desktop app, 2.1.310"
+  - type: input
+    id: failed_step
+    attributes:
+      label: Step that failed (START.md step number)
+  - type: textarea
+    id: error
+    attributes:
+      label: Exact error text
+      render: text
+  - type: textarea
+    id: smoother
+    attributes:
+      label: What would have made the install smoother and easier?
+      description: Every click, wait, unclear step or retry, and the change that would have removed it.
+    validations:
+      required: true
