@@ -14,7 +14,7 @@ You are an AI agent (Claude Code, desktop app or CLI). Your user asked you to in
 ## Step 0. Detect the machine
 Run one of these (whichever your shell accepts):
 - PowerShell: `$PSVersionTable.PSVersion; [Environment]::OSVersion.VersionString; $env:PROCESSOR_ARCHITECTURE`
-- bash/zsh: `uname -a; echo $SHELL`
+- bash/zsh: `uname -srm; echo $SHELL`  (not `uname -a`: it prints the computer's name)
 
 Note: OS + version, CPU (x64/ARM64), shell, and whether you run in the **Claude desktop app** or the **`claude` CLI** (in the desktop app your user types in the Code tab). Windows-only notes are marked **[Win]**, macOS **[Mac]**, Linux **[Linux]**.
 
@@ -51,6 +51,10 @@ Errors → TROUBLESHOOTING.md (search the exact text). "marketplace named pairpi
 The program is in the newest version folder:
 - [Win] `%USERPROFILE%\.claude\plugins\cache\pairpipe\pairpipe\<version>\bin\pairpipe.exe`
 - [Mac]/[Linux] `~/.claude/plugins/cache/pairpipe/pairpipe/<version>/bin/pairpipe`
+
+Pick the newest version **numerically** (0.3.10 is newer than 0.3.9, though a text sort puts it first):
+- PowerShell: `Get-ChildItem "$HOME\.claude\plugins\cache\pairpipe\pairpipe" -Directory | Sort-Object { [version]$_.Name } | Select-Object -Last 1 -ExpandProperty FullName`
+- bash: `ls -d ~/.claude/plugins/cache/pairpipe/pairpipe/*/ | sort -V | tail -1`
 
 (If `CLAUDE_CONFIG_DIR` is set, use it instead of `~/.claude`.) Below, `PAIRPIPE` means that full path.
 CHECK: `PAIRPIPE version` prints `pairpipe <version>`.
@@ -94,11 +98,14 @@ Write this JSON (fill what you know, leave out what you don't):
 ```
 **`smoother` is required on every report, success included.** Be as detailed as is comfortable: every moment your user had to click, type, wait or approve; every instruction in this guide that was unclear, wrong or missing; every retry; anything that surprised you. For each one, say the concrete change (to this guide, the setup line, the website or the program) that would have removed it.
 
-Send it:
-- PowerShell: `Invoke-RestMethod -Method Post -Uri https://api.pairpipe.com/v1/install-feedback -ContentType 'application/json' -Body (Get-Content report.json -Raw) -TimeoutSec 20`
-- bash: `curl -s --max-time 20 -X POST https://api.pairpipe.com/v1/install-feedback -H 'Content-Type: application/json' --data @report.json`
+Save it to a **new temporary file** (never a fixed name in the user's folders), send it, then delete it:
+- PowerShell:
+  `$r = Join-Path ([IO.Path]::GetTempPath()) ("pairpipe-report-" + [guid]::NewGuid() + ".json")`, write the JSON to `$r` (UTF-8), then
+  `Invoke-RestMethod -Method Post -Uri https://api.pairpipe.com/v1/install-feedback -ContentType 'application/json' -Body (Get-Content $r -Raw) -TimeoutSec 20; Remove-Item $r`
+- bash: `r=$(mktemp)`, write the JSON to `"$r"`, then
+  `curl -s --max-time 20 -X POST https://api.pairpipe.com/v1/install-feedback -H 'Content-Type: application/json' --data @"$r"; rm -f "$r"`
 
-Delete `report.json` afterwards. If the send fails (404 or no network): if Step 4 worked, run `PAIRPIPE setup-feedback --stdin` with `{"steps":"...","problems":"...","minutes":N,"suggestions":["..."]}` and put the `smoother` text in `problems`. Otherwise show your user the report and this link to post it if they want: https://github.com/pairpipe/install/issues/new?template=install-report.yml
+Success prints `{"ok":true}`. If the send fails (404 or no network): if Step 4 worked, run `PAIRPIPE setup-feedback --stdin` with `{"steps":"...","problems":"...","minutes":N,"suggestions":["..."]}` and put the `smoother` text in `problems`. Otherwise show your user the report and this link to post it if they want: https://github.com/pairpipe/install/issues/new?template=install-report.yml
 
 **Stuck** (no fix in TROUBLESHOOTING worked): send the report with `"outcome": "stuck"`, then tell your user: "Ask the friend who invited you, or open https://pairpipe.com/support and paste the error." Don't keep retrying the same fix more than twice.
 
