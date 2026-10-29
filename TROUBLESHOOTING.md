@@ -1,6 +1,6 @@
 # Troubleshooting index
 
-Find the line that matches your **exact error text** (search for a distinctive part of it), then open only that page. Each line: error → page. Seen counts are in each page.
+Links are relative to this file's URL: keep the same tag in the URL as START.md. Find the line that matches your **exact error text** (search for a distinctive part of it), then open only that page. Each line: error → page. Seen counts are in each page.
 
 If nothing matches: try the closest page once. If it still fails, send the Step 7 report with `"outcome": "stuck"` (see START.md).
 
