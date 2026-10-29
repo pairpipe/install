@@ -7,6 +7,13 @@
 - Issue pages use the same header table: Step, Seen (count · first · last), Where, Status.
 - Never put keys, tokens, emails or personal data in this repo.
 
+## Pinned versions (typical's condition, 2026-10-28)
+Users never read `main`. The paste line and the pairpipe.com setup line point at a **tag**: `https://raw.githubusercontent.com/pairpipe/install/<tag>/START.md`. Every link inside the guide is relative, so one pin covers the whole read.
+- Issue pages and fixes can merge to `main` any time. They reach users only with the next tag.
+- When START.md, TROUBLESHOOTING.md or any linked page changes in a way users need: cut a new tag (`v2`, `v3`, ...) from the reviewed `main` commit, then open a **pin-bump PR** in the pairpipe repo (`web/src/lib/setupLines.ts` `GUIDE_TAG`, plus the README paste line here). That PR is reviewed like any other.
+- Never move or delete a published tag.
+- Exception: `marketplace.json` is read from `main` (`https://raw.githubusercontent.com/pairpipe/install/main/marketplace.json`). Claude Code re-fetches the registered catalog URL on `marketplace update`, so a pinned catalog would freeze users on one plugin version. `main` is protected (PRs only), and the zip is pinned by SHA-256 inside the file. This is the same trust model as the old `pairpipe/plugin` Git marketplace on its default branch.
+
 ## On every plugin release
 `marketplace.json` pins the plugin zip by URL and SHA-256. After releasing `vX.Y.Z` in pairpipe/plugin:
 1. Build the zip from the tag, with the plugin at the zip root: `git -C <pairpipe-plugin clone> archive --format=zip -9 -o pairpipe-plugin-vX.Y.Z.zip vX.Y.Z:plugins/pairpipe`
@@ -14,4 +21,5 @@
 3. Update `url` and `sha256` in `marketplace.json` (via PR), then test with `claude plugin marketplace update pairpipe && claude plugin update pairpipe@pairpipe`.
 
 ## Daily report job
-Pull new `install-guide` reports → cluster by error text → update Seen counts / add issue pages / add index lines / fold repeated `smoother` ideas into START.md → one PR → notify the team about anything new or `stuck`.
+Pull new `install-guide` reports → cluster by error text → update Seen counts / add issue pages / add index lines / fold repeated `smoother` ideas into START.md → one PR here → notify the team about anything new or `stuck`.
+If that PR changes START.md or TROUBLESHOOTING.md: once it merges, cut the next tag and open the pin-bump PR in the pairpipe repo (see Pinned versions). Seen-count-only changes need no new tag.

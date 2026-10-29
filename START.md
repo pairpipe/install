@@ -6,7 +6,8 @@ You are an AI agent (Claude Code, desktop app or CLI). Your user asked you to in
 - Do the steps in order. Each step has a CHECK. If the check passes, skip to the next step.
 - Before running any command, show it to your user in one line ("Running: `winget install --id Git.Git -e`").
 - Never ask for, type or send passwords, API keys or tokens. pairpipe never needs them.
-- If a step fails: find the exact error text in [TROUBLESHOOTING.md](TROUBLESHOOTING.md) (raw: `https://raw.githubusercontent.com/pairpipe/install/main/TROUBLESHOOTING.md`) and open only the page it links. Don't read other pages.
+- **Every link in this guide is relative to the URL you read this file from.** Fetch linked pages from that same base, for example `https://raw.githubusercontent.com/pairpipe/install/<same tag>/TROUBLESHOOTING.md`. Never switch to `main` or another version.
+- If a step fails: find the exact error text in [TROUBLESHOOTING.md](TROUBLESHOOTING.md) and open only the page it links. Don't read other pages.
 - Keep notes as you go (what you ran, what failed, every moment your user had to act or wait). Step 7 needs them.
 - **Always do Step 7**, even if you stop early.
 

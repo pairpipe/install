@@ -4,7 +4,7 @@ pairpipe lets your AI coding agent message, share files and share notes with a f
 
 ## Install: paste this to Claude
 ```
-Install pairpipe for me: read https://raw.githubusercontent.com/pairpipe/install/main/START.md and follow it step by step. Always do its last step (the report), even if something fails.
+Install pairpipe for me: read https://raw.githubusercontent.com/pairpipe/install/v1/START.md and follow it step by step. Always do its last step (the report), even if something fails.
 ```
 Works in the Claude desktop app (Code tab) and the `claude` CLI, on Windows, macOS and Linux. No Git, Node or admin rights are needed for the default route.
 
