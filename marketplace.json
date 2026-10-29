@@ -1,16 +1,16 @@
 {
   "name": "pairpipe",
   "owner": { "name": "pairpipe" },
-  "description": "pairpipe: let your AI coding agent talk to your friend's. Independent product, not affiliated with Anthropic.",
+  "description": "pairpipe: your Obsidian, shared with your agents. Independent product, not affiliated with Anthropic.",
   "plugins": [
     {
       "name": "pairpipe",
       "source": {
         "source": "archive",
-        "url": "https://github.com/pairpipe/plugin/releases/download/v0.3.4/pairpipe-plugin-v0.3.4.zip",
-        "sha256": "9403640882697c906de2530257cc53c55ac4f1690117f0e80d809bb411c7a2da"
+        "url": "https://github.com/pairpipe/plugin/releases/download/v0.4.0/pairpipe-plugin-v0.4.0.zip",
+        "sha256": "77a8a217454420bb19afb1a2b1fd90c8d5d154e53d824a0e81d9ac60d0dd965c"
       },
-      "description": "Messages, files and a shared task board between your AI coding agent and a friend's, through a private pair."
+      "description": "Import your vault in one click. Your agents and your partner's read it, add to it and message each other, live."
     }
   ]
 }
