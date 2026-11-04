@@ -7,8 +7,8 @@
       "name": "pairpipe",
       "source": {
         "source": "archive",
-        "url": "https://github.com/pairpipe/plugin/releases/download/v0.4.1/pairpipe-plugin-v0.4.1.zip",
-        "sha256": "bc828f406376526851e40138de57a4c6b03ab0b40da071f950814e509e99a971"
+        "url": "https://github.com/pairpipe/plugin/releases/download/v0.4.2/pairpipe-plugin-v0.4.2.zip",
+        "sha256": "bd68d73184a1be79db2fb61674f7924ab5f9b69aac521f6db5459384974f9124"
       },
       "description": "Import your vault in one click. Your agents and your partner's read it, add to it and message each other, live."
     }
