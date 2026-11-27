@@ -6,7 +6,7 @@ You are an AI agent (Claude Code, desktop app or CLI). Your user asked you to in
 - Do the steps in order. Each step has a CHECK. If the check passes, skip to the next step.
 - Before running any command, show it to your user in one line ("Running: `winget install --id Git.Git -e`").
 - Never ask for, type or send passwords, API keys or tokens. pairpipe never needs them.
-- **Every link in this guide is relative to the URL you read this file from.** Fetch linked pages from that same base, for example `https://raw.githubusercontent.com/pairpipe/install/<same tag>/TROUBLESHOOTING.md`. Never switch to `main` or another version.
+- **Every link in this guide is relative to the URL you read this file from.** Fetch linked pages from that same base, for example `https://raw.githubusercontent.com/pairpipe/install/<same tag>/TROUBLESHOOTING.md`. Never switch to `main` or another version. **One exception:** the `marketplace.json` URL in Step 2 is on `main` on purpose. Claude Code re-reads it for plugin updates, and the plugin zip inside it is pinned by SHA-256. Use it as written; don't stop to ask about it.
 - If a step fails: find the exact error text in [TROUBLESHOOTING.md](TROUBLESHOOTING.md) and open only the page it links. Don't read other pages.
 - Keep notes as you go (what you ran, what failed, every moment your user had to act or wait). Step 7 needs them.
 - **Always do Step 7**, even if you stop early.
@@ -27,7 +27,7 @@ Fails → [prerequisites/network.md](prerequisites/network.md) (proxy, firewall,
 **1b. Claude Code version 2.1.224 or newer.** CHECK: `claude --version`.
 - Prints a version ≥ 2.1.224 → go on.
 - Older → `claude update`, then check again.
-- `claude` not found: if you are in the **desktop app**, that's normal. Skip to Step 2 (use the slash-command route). If you are in a terminal → [prerequisites/claude-code.md](prerequisites/claude-code.md).
+- `claude` not found: if you are in the **desktop app**, that's normal. The app has its own copy of Claude Code; Step 2 shows how to use it. If you are in a terminal → [prerequisites/claude-code.md](prerequisites/claude-code.md).
 
 **1c. Git: only if you need the fallback route.** You don't need Git unless Step 2's default route fails and TROUBLESHOOTING sends you to the Git route. Then follow [prerequisites/git.md](prerequisites/git.md).
 
@@ -39,11 +39,13 @@ claude plugin install pairpipe@pairpipe
 ```
 Both print `√ Successfully ...`. They are safe to re-run. Ignore "already installed".
 
-If `claude` isn't on your PATH (desktop app), ask your user to type these two lines in the chat, one at a time, and say "done":
-```
-/plugin marketplace add https://raw.githubusercontent.com/pairpipe/install/main/marketplace.json
-/plugin install pairpipe@pairpipe
-```
+**If `claude` isn't on your PATH (desktop app):** use the copy of Claude Code inside the app. No user action is needed.
+- bash/zsh: `C="${CLAUDE_CODE_EXECPATH:-$(find ~/Library/Application\ Support/Claude/claude-code -type f -perm -u+x -name claude 2>/dev/null | sort -V | tail -1)}"; "$C" --version`
+- PowerShell: `$C = $env:CLAUDE_CODE_EXECPATH; if (-not $C) { $C = Get-ChildItem "$env:LOCALAPPDATA\Claude-Data","$env:APPDATA\Claude\claude-code" -Recurse -Filter claude.exe -ErrorAction SilentlyContinue | Sort-Object LastWriteTime | Select-Object -Last 1 -ExpandProperty FullName }; & $C --version`
+
+Then run the two commands above with it: `"$C" plugin marketplace add <url>` and `"$C" plugin install pairpipe@pairpipe` (PowerShell: `& $C ...`).
+
+**Last resort, only if no copy is found:** ask your user to add it in the app's **Plugins** screen: add a marketplace by URL, paste `https://raw.githubusercontent.com/pairpipe/install/main/marketplace.json`, then install **pairpipe**. Typing `/plugin marketplace add <url>` in the chat does **not** work in the desktop app: it opens the Plugins screen and silently drops the URL.
 CHECK: `claude plugin list` shows `pairpipe@pairpipe` enabled, or the program exists (Step 3).
 Errors → TROUBLESHOOTING.md (search the exact text). "marketplace named pairpipe already exists" → [issues/marketplace-name-taken.md](issues/marketplace-name-taken.md).
 
@@ -61,6 +63,16 @@ CHECK: `PAIRPIPE version` prints `pairpipe <version>`.
 Fails → [issues/program-wont-run.md](issues/program-wont-run.md).
 
 ## Step 4. Sign in and connect
+**Tell your user first, in a short list, what pairpipe shares by default** on this computer (`PAIRPIPE settings` lists them):
+- **error-lookup:** the last lines of a failed command (secrets and home path removed), matched against the pair's lessons.
+- **hints:** one line when a lesson or task matches their prompt (the prompt is never stored).
+- **heartbeat:** the tool name and file name Claude is working on, at most every 5 minutes (never contents).
+- **pr-links:** pull request links and branch names.
+- **waiting:** a "waiting on you" state when Claude stops at a question.
+- **auto-task:** a short redacted goal, so the board can show what the agent is working on.
+
+Each one turns off with `PAIRPIPE settings <name> off`. Ask whether they want any off, and do it after connecting.
+
 pairpipe signs in with a one-time **setup code** from the website.
 - If your user's message already has a setup code or a pairpipe.com setup line, use that code.
 - Otherwise ask your user: "Open https://pairpipe.com, sign in with your email (or open the invite link your friend sent), then copy the setup line and paste it here." Wait for it, then take the code from it.
@@ -71,7 +83,8 @@ Errors (`invalid_code`, `already used`, `other_account`, `expired`) → TROUBLES
 
 ## Step 5. Turn it on
 Ask your user to type `/reload-plugins` and press Enter, then say "done". (You can't type slash commands, and the reload gives you no turn, so wait for their message.)
-In the desktop app, starting a new session also works.
+In the desktop app, **starting a new session** is the surest way.
+Tip: you can run Step 6 first. Before the reload, `status` says "Almost ready", which is expected.
 
 ## Step 6. Verify
 Run `PAIRPIPE status` (or after the reload just `pairpipe status`, or call the `pairpipe_status` tool).
@@ -98,14 +111,14 @@ Write this JSON (fill what you know, leave out what you don't):
 ```
 **`smoother` is required on every report, success included.** Be as detailed as is comfortable: every moment your user had to click, type, wait or approve; every instruction in this guide that was unclear, wrong or missing; every retry; anything that surprised you. For each one, say the concrete change (to this guide, the setup line, the website or the program) that would have removed it.
 
-Save it to a **new temporary file** (never a fixed name in the user's folders), send it, then delete it:
+`prereqs` must be a **list** (even if empty: `[]`). Write the JSON with your **file-writing tool**, not inline in a shell command; Windows command filters have blocked inline JSON. Save it to a **new temporary file** (never a fixed name in the user's folders), send it, then delete it:
 - PowerShell:
   `$r = Join-Path ([IO.Path]::GetTempPath()) ("pairpipe-report-" + [guid]::NewGuid() + ".json")`, write the JSON to `$r` (UTF-8), then
   `Invoke-RestMethod -Method Post -Uri https://api.pairpipe.com/v1/install-feedback -ContentType 'application/json' -Body (Get-Content $r -Raw) -TimeoutSec 20; Remove-Item $r`
 - bash: `r=$(mktemp)`, write the JSON to `"$r"`, then
   `curl -s --max-time 20 -X POST https://api.pairpipe.com/v1/install-feedback -H 'Content-Type: application/json' --data @"$r"; rm -f "$r"`
 
-Success prints `{"ok":true}`. If the send fails (404 or no network): if Step 4 worked, run `PAIRPIPE setup-feedback --stdin` with `{"steps":"...","problems":"...","minutes":N,"suggestions":["..."]}` and put the `smoother` text in `problems`. Otherwise show your user the report and this link to post it if they want: https://github.com/pairpipe/install/issues/new?template=install-report.yml
+Success prints `{"ok":true}`. If the send fails (404 or no network): if Step 4 worked, run `PAIRPIPE setup-feedback --stdin` (it works even though `PAIRPIPE help` doesn't list it yet) with `{"steps":"...","problems":"...","minutes":N,"suggestions":["..."]}` and put the `smoother` text in `problems`. Otherwise show your user the report and this link to post it if they want: https://github.com/pairpipe/install/issues/new?template=install-report.yml
 
 **Stuck** (no fix in TROUBLESHOOTING worked): send the report with `"outcome": "stuck"`, then tell your user: "Ask the friend who invited you, or open https://pairpipe.com/support and paste the error." Don't keep retrying the same fix more than twice.
 
