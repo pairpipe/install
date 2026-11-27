@@ -18,6 +18,7 @@ If nothing matches: try the closest page once. If it still fails, send the Step 
 | `Failed to clone marketplace repository: Command 'git' not found or is in an unsafe location` | [issues/git-missing-windows.md](issues/git-missing-windows.md) |
 | `git: command not found` / `'git' is not recognized` during a plugin command | [issues/git-missing-windows.md](issues/git-missing-windows.md) |
 | A marketplace named `pairpipe` already exists / old pairpipe install | [issues/marketplace-name-taken.md](issues/marketplace-name-taken.md) |
+| Desktop app: `/plugin marketplace add <url>` opens the Plugins screen but nothing is added | [issues/claude-not-on-path-desktop-app.md](issues/claude-not-on-path-desktop-app.md) |
 | `Unknown source type` / `archive` not supported / `Invalid input` on source | [prerequisites/claude-code.md#update](prerequisites/claude-code.md#update) (Claude Code older than 2.1.224) |
 | `SHA-256 mismatch` / download refused | [issues/archive-download-failed.md](issues/archive-download-failed.md) |
 | Download timed out / `ETIMEDOUT` / proxy errors on github.com | [prerequisites/network.md](prerequisites/network.md) |
@@ -28,6 +29,7 @@ If nothing matches: try the closest page once. If it still fails, send the Step 
 |---|---|
 | No `pairpipe` folder under `plugins/cache` | [issues/program-wont-run.md#no-folder](issues/program-wont-run.md#no-folder) |
 | `pairpipe` not found before reload | [issues/reload-plugins-needed.md](issues/reload-plugins-needed.md) |
+| `bad interpreter: /bin/sh^M` (macOS/Linux, plugin 0.4.4 installed before 2026-11-27) | [issues/program-wont-run.md#crlf](issues/program-wont-run.md#crlf) |
 | `Permission denied` / `cannot execute binary file` (Mac/Linux) | [issues/program-wont-run.md#permission-denied](issues/program-wont-run.md#permission-denied) |
 | Windows SmartScreen / antivirus blocked `pairpipe.exe`; macOS "cannot be opened" | [issues/program-wont-run.md#blocked](issues/program-wont-run.md#blocked) |
 
